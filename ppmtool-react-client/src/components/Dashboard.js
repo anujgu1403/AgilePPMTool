@@ -14,7 +14,6 @@ class Dashboard extends Component {
               <CreateProjectButton />
               <br />
               <hr />
-
               <ProjectItem />
             </div>
           </div>
