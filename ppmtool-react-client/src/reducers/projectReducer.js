@@ -15,7 +15,7 @@ export default function(state = initailState, action) {
     case GET_PROJECT:
       return {
         ...state,
-        projects: action.payload
+        project: action.payload
       };
     case DELETE_PROJECT:
       return {

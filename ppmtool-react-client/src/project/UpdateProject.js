@@ -21,7 +21,7 @@ class UpdateProject extends Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
-      this.state({ errors: nextProps.errors });
+      this.setState({ errors: nextProps.errors });
     }
     const {
       id,
@@ -32,7 +32,7 @@ class UpdateProject extends Component {
       end_date
     } = nextProps.project;
 
-    this.state({
+    this.setState({
       id,
       projectName,
       projectIdentifier,
@@ -42,7 +42,7 @@ class UpdateProject extends Component {
     });
   }
   componentDidMount() {
-    const { id } = this.props.match.param;
+    const { id } = this.props.match.params;
     this.props.getProject(id, this.props.history);
   }
   onChange(e) {
@@ -51,7 +51,6 @@ class UpdateProject extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-
     const updateProject = {
       id: this.state.id,
       projectName: this.state.projectName,
@@ -72,7 +71,7 @@ class UpdateProject extends Component {
             <div className="col-md-8 m-auto">
               <h5 className="display-4 text-center">Update Project form</h5>
               <hr />
-              <form>
+              <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                   <input
                     type="text"
@@ -154,12 +153,12 @@ UpdateProject.propTypes = {
   errors: PropTypes.object.isRequired
 };
 
-const mapStateToMap = state => ({
-  project: state.project.project,
+const mapStateToProps = state => ({
+  project: state.projects.project,
   errors: state.errors
 });
 
 export default connect(
-  mapStateToMap,
+  mapStateToProps,
   { getProject, createProject }
 )(UpdateProject);

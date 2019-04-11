@@ -28,7 +28,7 @@ class AddProject extends Component {
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: [e.target.value] });
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   onSubmit(e) {
@@ -146,11 +146,11 @@ AddProject.propTypes = {
   errors: PropTypes.object.isRequired
 };
 
-const mapStateToMap = state => ({
+const mapStateToProps = state => ({
   errors: state.errors
 });
 
 export default connect(
-  mapStateToMap,
+  mapStateToProps,
   { createProject }
 )(AddProject);

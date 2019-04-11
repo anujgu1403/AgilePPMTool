@@ -9,8 +9,11 @@ class Dashboard extends Component {
   componentDidMount() {
     this.props.getProjects();
   }
+
   render() {
+    console.log(this.props);
     const { projects } = this.props.project;
+
     return (
       <div className="projects">
         <div className="container">
@@ -19,8 +22,9 @@ class Dashboard extends Component {
               <h1 className="display-4 text-center">Projects</h1>
               <br />
               <CreateProjectButton />
+
               <br />
-              <hr />
+              <br />
               {projects.map(project => (
                 <ProjectItem key={project.id} project={project} />
               ))}
@@ -32,15 +36,16 @@ class Dashboard extends Component {
   }
 }
 
-Dashboard.PropTypes = {
-  getProjects: PropTypes.func.isRequired,
-  project: PropTypes.object.isRequired
+Dashboard.propTypes = {
+  project: PropTypes.object.isRequired,
+  getProjects: PropTypes.func.isRequired
 };
 
-const mapStateToMap = state => ({
-  errors: state.errors
+const mapStateToProps = state => ({
+  project: state.projects
 });
+
 export default connect(
-  mapStateToMap,
+  mapStateToProps,
   { getProjects }
 )(Dashboard);

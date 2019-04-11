@@ -1,6 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, DELETE_PROJECT } from "./types";
-import { GET_PROJECTS, GET_PROJECT } from "./types";
+import { GET_ERRORS, GET_PROJECTS, GET_PROJECT, DELETE_PROJECT } from "./types";
 
 export const createProject = (project, history) => async dispatch => {
   try {
@@ -41,7 +40,7 @@ export const getProject = (id, history) => async dispatch => {
 export const deleteProject = id => async dispatch => {
   if (
     window.confirm(
-      "Are you sure? This will delete the project and all data in it"
+      "Are you sure? This will delete the project and all the data related to it"
     )
   ) {
     await axios.delete(`/api/project/${id}`);
