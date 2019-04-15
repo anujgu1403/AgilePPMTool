@@ -1,42 +1,59 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import classnames from "classnames";
 import { addProjectTask } from "../../../actions/backlogActions";
-import { classnames } from "classnames";
+import PropTypes from "prop-types";
 
 class AddProjectTask extends Component {
   constructor(props) {
     super(props);
+    const { id } = this.props.match.params;
+
     this.state = {
       summary: "",
       acceptanceCriteria: "",
-      dueDate: null,
-      priority: "",
-      status: ""
+      status: "",
+      priority: 0,
+      dueDate: "",
+      projectIdentifier: id,
+      errors: {}
     };
+    this.changeHandler = this.changeHandler.bind(this);
+    this.submitHandler = this.submitHandler.bind(this);
   }
 
-  changeHandler = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
 
-  submitHandler = e => {
+  // on change
+  changeHandler(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+  //on submit
+  submitHandler(e) {
     e.preventDefault();
-    const { id } = this.props.match.params;
-    const newProjectTask = {
+
+    const newTask = {
       summary: this.state.summary,
       acceptanceCriteria: this.state.acceptanceCriteria,
-      dueDate: this.state.dueDate,
+      status: this.state.status,
       priority: this.state.priority,
-      status: this.state.status
+      dueDate: this.state.dueDate
     };
-    this.props.addProjectTask(id, newProjectTask, this.props.history);
-  };
+    this.props.addProjectTask(
+      this.state.projectIdentifier,
+      newTask,
+      this.props.history
+    );
+  }
+
   render() {
     const { id } = this.props.match.params;
+    const { errors } = this.state;
     return (
       <div className="add-PBI">
         <div className="container">
@@ -45,20 +62,23 @@ class AddProjectTask extends Component {
               <Link to={`/projectBoard/${id}`} className="btn btn-light">
                 Back to Project Board
               </Link>
-              <h4 className="display-4 text-center">
-                Add /Update Project Task
-              </h4>
+              <h4 className="display-4 text-center">Add Project Task</h4>
               <p className="lead text-center">Project Name + Project Code</p>
               <form onSubmit={this.submitHandler}>
                 <div className="form-group">
                   <input
                     type="text"
-                    className="form-control form-control-lg"
+                    className={classnames("form-control form-control-lg", {
+                      "is-invalid": errors.summary
+                    })}
                     name="summary"
                     placeholder="Project Task summary"
                     value={this.state.summary}
                     onChange={this.changeHandler}
                   />
+                  {errors.summary && (
+                    <div className="invalid-feedback">{errors.summary}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <textarea
@@ -119,13 +139,17 @@ class AddProjectTask extends Component {
     );
   }
 }
+
 AddProjectTask.propTypes = {
-  addProjectTask: PropTypes.func.isRequired
+  addProjectTask: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+
 export default connect(
-  null,
-  {
-    addProjectTask
-  }
+  mapStateToProps,
+  { addProjectTask }
 )(AddProjectTask);
